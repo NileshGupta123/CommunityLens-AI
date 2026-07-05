@@ -12,16 +12,24 @@ Rules:
 - Be concise and direct — 2-4 sentences, no long preambles.
 - When relevant, give a clear recommendation (e.g. "avoid X area", "Y hospital has beds available").
 - If the data provided doesn't answer the question, say so honestly instead of guessing.
+- Use the conversation history to understand follow-up questions and context.
 """
 
 
-def ask_groq(user_message: str, city_context: str) -> str:
+def ask_groq(user_message: str, city_context: str, history: list = None) -> str:
+    messages = [
+        {"role": "system", "content": f"{SYSTEM_INSTRUCTION}\n\nCITY DATA:\n{city_context}"},
+    ]
+
+    for msg in (history or [])[-6:]:
+        role = "user" if msg.role == "user" else "assistant"
+        messages.append({"role": role, "content": msg.text})
+
+    messages.append({"role": "user", "content": user_message})
+
     response = _client.chat.completions.create(
         model="llama-3.3-70b-versatile",
-        messages=[
-            {"role": "system", "content": f"{SYSTEM_INSTRUCTION}\n\nCITY DATA:\n{city_context}"},
-            {"role": "user", "content": user_message},
-        ],
+        messages=messages,
         temperature=0.3,
         max_tokens=300,
     )

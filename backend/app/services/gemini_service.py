@@ -12,6 +12,7 @@ Rules:
 - Be concise and direct — 2-4 sentences, no long preambles.
 - When relevant, give a clear recommendation (e.g. "avoid X area", "Y hospital has beds available").
 - If the data provided doesn't answer the question, say so honestly instead of guessing.
+- Use the CONVERSATION HISTORY to understand follow-up questions and context (e.g. "what about traffic there?" referring to a previously mentioned area).
 """
 
 
@@ -47,8 +48,24 @@ def format_city_data(dashboard_data: dict) -> str:
     return "\n".join(lines)
 
 
-def ask_gemini(user_message: str, city_context: str) -> str:
-    prompt = f"{SYSTEM_INSTRUCTION}\n\nCITY DATA:\n{city_context}\n\nUSER QUESTION: {user_message}"
+def _format_history(history: list) -> str:
+    if not history:
+        return "None yet — this is the first message."
+    lines = []
+    for msg in history[-6:]:
+        speaker = "User" if msg.role == "user" else "Assistant"
+        lines.append(f"{speaker}: {msg.text}")
+    return "\n".join(lines)
+
+
+def ask_gemini(user_message: str, city_context: str, history: list = None) -> str:
+    history_text = _format_history(history or [])
+    prompt = (
+        f"{SYSTEM_INSTRUCTION}\n\n"
+        f"CITY DATA:\n{city_context}\n\n"
+        f"CONVERSATION HISTORY:\n{history_text}\n\n"
+        f"USER QUESTION: {user_message}"
+    )
 
     response = _client.models.generate_content(
         model="gemini-2.5-flash",

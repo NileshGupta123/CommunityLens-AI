@@ -20,12 +20,12 @@ async def chat(request: ChatRequest, db: AsyncSession = Depends(get_db)):
     city_context = format_city_data(dashboard_data)
 
     try:
-        reply = ask_gemini(request.message, city_context)
-        return ChatResponse(reply=reply)
+        reply = ask_gemini(request.message, city_context, request.history)
+        return ChatResponse(reply=reply, source="gemini")
     except Exception as gemini_error:
         try:
-            reply = ask_groq(request.message, city_context)
-            return ChatResponse(reply=reply)
+            reply = ask_groq(request.message, city_context, request.history)
+            return ChatResponse(reply=reply, source="groq")
         except Exception as groq_error:
             raise HTTPException(
                 status_code=502,

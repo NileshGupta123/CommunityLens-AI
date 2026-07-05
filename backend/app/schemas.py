@@ -65,12 +65,19 @@ class DashboardOut(BaseModel):
     total_beds_available: int
 
 
+class ChatMessage(BaseModel):
+    role: str  # "user" or "assistant"
+    text: str
+
+
 class ChatRequest(BaseModel):
     message: str
+    history: list[ChatMessage] = []
 
 
 class ChatResponse(BaseModel):
     reply: str
+    source: str  # "gemini" or "groq"
 
 
 class DecisionOut(BaseModel):
@@ -85,8 +92,8 @@ class DecisionOut(BaseModel):
 class ForecastPoint(BaseModel):
     hours_ahead: int
     predicted_value: float
- 
- 
+
+
 class ForecastOut(BaseModel):
     area_name: str
     metric: str  # "aqi"
