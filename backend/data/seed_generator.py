@@ -62,6 +62,25 @@ def _congestion_for_hour(hour: int) -> tuple[str, float]:
     return level, round(speed, 1)
 
 
+async def seed_if_empty():
+    """
+    Check if the areas table is empty and seed it if so.
+    Called on every app startup — this makes the app self-healing on platforms
+    like Render's free tier, where the SQLite file is wiped on every restart.
+    """
+    from sqlalchemy import select
+
+    async with AsyncSessionLocal() as session:
+        result = await session.execute(select(Area).limit(1))
+        existing = result.scalar_one_or_none()
+        if existing is not None:
+            print("Database already has data — skipping seed.")
+            return
+
+    print("Database is empty — running seed...")
+    await seed()
+
+
 async def seed():
     await init_db()
 

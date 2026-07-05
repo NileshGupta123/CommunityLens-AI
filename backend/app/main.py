@@ -32,6 +32,8 @@ app.include_router(predict.router)
 @app.on_event("startup")
 async def on_startup():
     await init_db()
+    from data.seed_generator import seed_if_empty
+    await seed_if_empty()
 
 
 @app.get("/")
