@@ -100,3 +100,19 @@ class ForecastOut(BaseModel):
     current_value: float
     forecast: list[ForecastPoint]
     trend: str  # "improving" / "worsening" / "stable"
+
+
+class ReportOut(BaseModel):
+    """Full AI-generated narrative report for one area, used for the downloadable PDF."""
+    area_name: str
+    generated_at: str
+    aqi_value: float
+    pm25: float
+    pm10: float
+    congestion_level: str
+    avg_speed_kmph: float
+    total_hospitals: int
+    beds_available: int
+    risk_score: float
+    risk_category: str
+    narrative: str

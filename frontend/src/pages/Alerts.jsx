@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { getAllDecisions, getOvercrowdedHospitals } from "../services/api";
+import InfoTooltip from "../components/InfoTooltip";
 
 const RISK_STYLE = {
   Low: { bg: "bg-safe/10", text: "text-safe", border: "border-safe/30" },
@@ -41,6 +42,7 @@ export default function Alerts() {
         </p>
       </div>
 
+      {/* Overcrowded hospital alerts */}
       {overcrowded.length > 0 && (
         <div className="mb-10">
           <h2 className="font-display text-lg font-semibold text-risk mb-3 flex items-center gap-2">
@@ -60,8 +62,10 @@ export default function Alerts() {
         </div>
       )}
 
-      <h2 className="font-display text-lg font-semibold text-ink mb-4">
+      {/* Risk-ranked decision chain per area */}
+      <h2 className="font-display text-lg font-semibold text-ink mb-4 flex items-center">
         Area Risk Ranking (worst first)
+        <InfoTooltip text="Risk score combines Air Quality (50%), Traffic (30%), and Hospital Load (20%) into one 0-100 score." />
       </h2>
       <div className="space-y-4">
         {decisions.map((d, i) => {

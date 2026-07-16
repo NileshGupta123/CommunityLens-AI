@@ -52,3 +52,28 @@ def summarize_decision(area_name: str, risk_score: float, risk_category: str, re
         max_tokens=120,
     )
     return response.choices[0].message.content
+
+
+def generate_area_report(area_name: str, stats: dict) -> str:
+    """Generate a longer, structured narrative report for one area (used for the PDF report)."""
+    prompt = f"""Write a concise city-conditions report for {area_name}, Mumbai, based on this live data:
+
+Air Quality Index: {stats['aqi_value']} (PM2.5: {stats['pm25']}, PM10: {stats['pm10']})
+Traffic: {stats['congestion_level']} congestion, {stats['avg_speed_kmph']} km/h average speed
+Hospitals: {stats['total_hospitals']} nearby, {stats['beds_available']} beds available
+Risk Score: {stats['risk_score']}/100 ({stats['risk_category']})
+
+Write 3 short paragraphs:
+1. Current conditions summary (2-3 sentences)
+2. What this means for residents today (2-3 sentences, practical)
+3. A brief outlook/recommendation (1-2 sentences)
+
+Be direct, factual, and practical. No headers, no markdown, no preamble — just the three paragraphs."""
+
+    response = _client.chat.completions.create(
+        model="llama-3.3-70b-versatile",
+        messages=[{"role": "user", "content": prompt}],
+        temperature=0.4,
+        max_tokens=400,
+    )
+    return response.choices[0].message.content

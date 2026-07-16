@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
 } from "recharts";
@@ -21,15 +22,20 @@ export default function Predictions() {
   const [chartData, setChartData] = useState([]);
   const [forecast, setForecast] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [searchParams] = useSearchParams();
 
   useEffect(() => {
     getDashboard()
       .then((res) => {
         const areaList = res.areas.map((entry) => entry.area);
         setAreas(areaList);
-        if (areaList.length > 0) setSelectedAreaId(areaList[0].id);
+
+        const urlAreaId = Number(searchParams.get("area"));
+        const preselected = areaList.find((a) => a.id === urlAreaId);
+        setSelectedAreaId(preselected ? preselected.id : areaList[0]?.id ?? null);
       })
       .catch(() => setAreas([]));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -122,25 +128,8 @@ export default function Predictions() {
                 <YAxis tick={{ fontSize: 11 }} />
                 <Tooltip contentStyle={{ fontFamily: "monospace", fontSize: 12, borderRadius: 8 }} />
                 <Legend />
-                <Line
-                  type="monotone"
-                  dataKey="actual"
-                  stroke="#0F172A"
-                  strokeWidth={2}
-                  dot={false}
-                  name="Actual (past 24h)"
-                  connectNulls
-                />
-                <Line
-                  type="monotone"
-                  dataKey="predicted"
-                  stroke="#F5A623"
-                  strokeWidth={2}
-                  strokeDasharray="6 4"
-                  dot={{ r: 3 }}
-                  name="Predicted (next 6h)"
-                  connectNulls
-                />
+                <Line type="monotone" dataKey="actual" stroke="#0F172A" strokeWidth={2} dot={false} name="Actual (past 24h)" connectNulls />
+                <Line type="monotone" dataKey="predicted" stroke="#F5A623" strokeWidth={2} strokeDasharray="6 4" dot={{ r: 3 }} name="Predicted (next 6h)" connectNulls />
               </LineChart>
             </ResponsiveContainer>
             <p className="text-xs text-slate-muted mt-2">

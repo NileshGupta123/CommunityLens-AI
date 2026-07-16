@@ -7,6 +7,8 @@ const api = axios.create({
   headers: { "Content-Type": "application/json" },
 });
 
+export const checkHealth = () => api.get("/health").then((res) => res.data);
+
 export const getDashboard = () => api.get("/dashboard").then((res) => res.data);
 
 export const getAqiHistory = (areaId) =>
@@ -33,5 +35,8 @@ export const getAllDecisions = () => api.get("/decision").then((res) => res.data
 
 export const getAqiForecast = (areaId, hours = 6) =>
   api.get(`/predict/aqi/${areaId}?hours=${hours}`).then((res) => res.data);
+
+export const getAreaReport = (areaId) =>
+  api.get(`/report/${areaId}`).then((res) => res.data);
 
 export default api;

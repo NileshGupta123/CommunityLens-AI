@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from app.routers import dashboard, aqi, traffic, hospitals, chat, decision, predict
+from app.routers import dashboard, aqi, traffic, hospitals, chat, decision, predict, report
 from fastapi.middleware.cors import CORSMiddleware
 
 
@@ -27,6 +27,7 @@ app.include_router(hospitals.router)
 app.include_router(chat.router)
 app.include_router(decision.router)
 app.include_router(predict.router)
+app.include_router(report.router)
 
 
 @app.on_event("startup")

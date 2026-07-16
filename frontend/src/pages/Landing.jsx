@@ -121,6 +121,42 @@ export default function Landing() {
         </div>
       </section>
 
+      {/* How it works */}
+      <section className="max-w-6xl mx-auto px-6 py-16 border-t border-ink/10">
+        <h2 className="font-display text-2xl font-semibold text-ink mb-10 text-center">
+          How it works
+        </h2>
+        <div className="grid md:grid-cols-3 gap-8">
+          <div className="text-center">
+            <div className="w-12 h-12 rounded-full bg-safe/10 text-safe font-display font-semibold text-lg flex items-center justify-center mx-auto mb-4">
+              1
+            </div>
+            <h3 className="font-display font-semibold text-ink mb-2">We track live city data</h3>
+            <p className="text-sm text-ink/60">
+              Air quality, traffic, and hospital capacity across 8 Mumbai areas, updated continuously.
+            </p>
+          </div>
+          <div className="text-center">
+            <div className="w-12 h-12 rounded-full bg-signal/10 text-signal-dark font-display font-semibold text-lg flex items-center justify-center mx-auto mb-4">
+              2
+            </div>
+            <h3 className="font-display font-semibold text-ink mb-2">AI analyzes the risk</h3>
+            <p className="text-sm text-ink/60">
+              A weighted scoring engine combines pollution, congestion, and hospital load into one risk score per area.
+            </p>
+          </div>
+          <div className="text-center">
+            <div className="w-12 h-12 rounded-full bg-risk/10 text-risk font-display font-semibold text-lg flex items-center justify-center mx-auto mb-4">
+              3
+            </div>
+            <h3 className="font-display font-semibold text-ink mb-2">You get a clear decision</h3>
+            <p className="text-sm text-ink/60">
+              Ask the AI assistant, search any area, or browse the dashboard &#8212; and get a direct recommendation, not just numbers.
+            </p>
+          </div>
+        </div>
+      </section>
+
       {/* Features */}
       <section className="max-w-6xl mx-auto px-6 py-16 border-t border-ink/10">
         <h2 className="font-display text-2xl font-semibold text-ink mb-2">

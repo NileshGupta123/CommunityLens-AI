@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
 } from "recharts";
@@ -17,15 +18,20 @@ export default function Analytics() {
   const [aqiData, setAqiData] = useState([]);
   const [trafficData, setTrafficData] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [searchParams] = useSearchParams();
 
   useEffect(() => {
     getDashboard()
       .then((res) => {
         const areaList = res.areas.map((entry) => entry.area);
         setAreas(areaList);
-        if (areaList.length > 0) setSelectedAreaId(areaList[0].id);
+
+        const urlAreaId = Number(searchParams.get("area"));
+        const preselected = areaList.find((a) => a.id === urlAreaId);
+        setSelectedAreaId(preselected ? preselected.id : areaList[0]?.id ?? null);
       })
       .catch(() => setAreas([]));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -89,17 +95,8 @@ export default function Analytics() {
                 <CartesianGrid strokeDasharray="3 3" stroke="#e5e5e0" />
                 <XAxis dataKey="time" tick={{ fontSize: 11 }} interval={2} />
                 <YAxis tick={{ fontSize: 11 }} />
-                <Tooltip
-                  contentStyle={{ fontFamily: "monospace", fontSize: 12, borderRadius: 8 }}
-                />
-                <Line
-                  type="monotone"
-                  dataKey="aqi"
-                  stroke="#E4572E"
-                  strokeWidth={2}
-                  dot={false}
-                  name="AQI"
-                />
+                <Tooltip contentStyle={{ fontFamily: "monospace", fontSize: 12, borderRadius: 8 }} />
+                <Line type="monotone" dataKey="aqi" stroke="#E4572E" strokeWidth={2} dot={false} name="AQI" />
               </LineChart>
             </ResponsiveContainer>
           </div>
@@ -111,17 +108,8 @@ export default function Analytics() {
                 <CartesianGrid strokeDasharray="3 3" stroke="#e5e5e0" />
                 <XAxis dataKey="time" tick={{ fontSize: 11 }} interval={2} />
                 <YAxis tick={{ fontSize: 11 }} label={{ value: "km/h", angle: -90, position: "insideLeft", fontSize: 11 }} />
-                <Tooltip
-                  contentStyle={{ fontFamily: "monospace", fontSize: 12, borderRadius: 8 }}
-                />
-                <Line
-                  type="monotone"
-                  dataKey="speed"
-                  stroke="#F5A623"
-                  strokeWidth={2}
-                  dot={false}
-                  name="Avg Speed (km/h)"
-                />
+                <Tooltip contentStyle={{ fontFamily: "monospace", fontSize: 12, borderRadius: 8 }} />
+                <Line type="monotone" dataKey="speed" stroke="#F5A623" strokeWidth={2} dot={false} name="Avg Speed (km/h)" />
               </LineChart>
             </ResponsiveContainer>
             <p className="text-xs text-slate-muted mt-2">
